@@ -33,10 +33,10 @@ options:
 
 ```bash
 docker run -d \
-  --name "dirrise_containername" `# Create unique container name if you run multiple instancest` \
-  -v "/home/username/hostdir:/mnt/watchdir" `# Create unique container name if you run multiple instancest` \
-  -it ghcr.io/mrwyss/dirrise:latest python ./dirrise.py \
-  --folder-path "/mnt/watchdir" `# Must match with container path above` \
-  --file-extension ".txt" `# File extension with dot` \
-  --apprise-url 'ntfys://user:password@ntfy.domain.org/topic' `# Regular apprise Url `
+  --name "dirrise_containername"                                   `# Create unique container name if you run multiple instances` \
+  -v "/home/username/hostdir:/mnt/watchdir"                        `# Host:Container mapping, the container path can by anything but has to match with --folder-path` \
+  -it ghcr.io/mrwyss/dirrise:latest python ./dirrise.py            `# No change reguired` \
+  --folder-path "/mnt/watchdir"                                    `# Must match with container path above` \
+  --file-extension ".txt"                                          `# File extension with dot` \
+  --apprise-url 'ntfys://user:password@ntfy.domain.org/topic'      `# Regular apprise Url `
 ```
