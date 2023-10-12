@@ -1,5 +1,9 @@
 # dirrise
 
+[![Publish Docker image](https://github.com/MrWyss/dirrise/actions/workflows/publish_docker_image.yml/badge.svg)](https://github.com/MrWyss/dirrise/actions/workflows/publish_docker_image.yml)
+[![Image Tag](https://ghcr-badge.egpl.dev/mrwyss/dirrise/tags?color=%2344cc11&ignore=&n=3&label=image+tags&trim=)](https://github.com/MrWyss/dirrise/pkgs/container/dirrise)
+[![Image Size](https://ghcr-badge.egpl.dev/mrwyss/dirrise/size?color=%2344cc11&tag=latest&label=image+size&trim=)](https://github.com/MrWyss/dirrise/pkgs/container/dirrise)
+
 Watches a folder for new files with a given extension and sends a notification via apprise.
 
 ## Help
@@ -29,16 +33,10 @@ options:
 
 ```bash
 docker run -d \
-  --name "dirrise_containername" `# Create unique container name if you run multiple instances` \
-  -v /folder/to/watch:/mnt/watchdir `# Host:Container mapping, the container path can by anything but has to match with --folder-path ` \
+  --name "dirrise_containername" `# Create unique container name if you run multiple instancest` \
+  -v "/home/username/hostdir:/mnt/watchdir" `# Create unique container name if you run multiple instancest` \
   -it ghcr.io/mrwyss/dirrise:latest python ./dirrise.py \
-  --folder-path "/mnt/watchdirwatchdir" `# Match with container path above` \ 
-  --file-extension ".txt"` \
-  --apprise-url 'ntfys://user:password@ntfy.domain.org/notes' `# Regular apprise url` \
-```
-
-### Docker Build
-
-```bash
-docker build -t dirrise:0.0.1 -t dirrise:latest .
+  --folder-path "/mnt/watchdir" `# Must match with container path above` \
+  --file-extension ".txt" `# File extension with dot` \
+  --apprise-url 'ntfys://user:password@ntfy.domain.org/topic' `# Regular apprise Url `
 ```
