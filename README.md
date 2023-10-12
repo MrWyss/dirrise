@@ -24,7 +24,7 @@ options:
   --notification-title NOTIFICATION_TITLE
                         Notification title
   --message-template MESSAGE_TEMPLATE
-                        Available variables: FILE, SUBFOLDER, FOLDER, WATCHFOLDER. Use {variable} to replace the variable with the value. Use \{variable} to escape the variable. Use {{variable}} to use the variable as a m
+                        Available variables: FILE, SUBFOLDER, FOLDER, WATCHFOLDER. Use {variable} to replace the variable with the value. Use \{variable} to escape the variable.
   --recursive           Watch folder recursively
   --version             show program's version number and exit
 ```

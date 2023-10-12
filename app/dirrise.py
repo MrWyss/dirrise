@@ -70,9 +70,9 @@ def main():
     parser.add_argument('--file-extension', type=str, required=True, help='File extension to watch, like .txt')
     parser.add_argument('--apprise-url', type=str, required=True, help='Appriser URL like ntfys://user:password@ntfy.domain.org/watchdir')
     parser.add_argument('--notification-title', type=str, default='New file detected', help='Notification title')
-    parser.add_argument('--message-template', type=str, default='New file "{FILE}" found in subfolder "{SUBFOLDER}" and folder "{FOLDER}" for the watch folder "{WATCHFOLDER}', help='Available variables: FILE, SUBFOLDER, FOLDER, WATCHFOLDER. Use {variable} to replace the variable with the value. Use \\{variable} to escape the variable. Use {{variable}} to use the variable as a m')
+    parser.add_argument('--message-template', type=str, default='New file "{FILE}" found in subfolder "{SUBFOLDER}" and folder "{FOLDER}" for the watch folder "{WATCHFOLDER}', help='Available variables: FILE, SUBFOLDER, FOLDER, WATCHFOLDER. Use {variable} to replace the variable with the value. Use \\{variable} to escape the variable.')
     parser.add_argument('--recursive', action='store_true', help='Watch folder recursively', default=True)
-    parser.add_argument('--version', action='version', version='%(prog)s 0.0.1')
+    parser.add_argument('--version', action='version', version='%(prog)s 0.0.2')
     args = parser.parse_args()
 
 
