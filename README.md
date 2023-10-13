@@ -77,3 +77,6 @@ docker run -it -d --name "dirrise_containername" \
 --env-file .env \
 ghcr.io/mrwyss/dirrise:latest
 ```
+
+## Contributions
+- please do, I'm happy to accept PRs.  
