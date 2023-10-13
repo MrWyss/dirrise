@@ -8,7 +8,7 @@ from apprise import AppriseConfig, Apprise
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
-version = '0.0.3'
+version = '0.0.4'
 
 class AppriseNotifier:
     def __init__(self, apprise_url):
