@@ -46,7 +46,7 @@ docker run -d \
   -it ghcr.io/mrwyss/dirrise:latest python ./dirrise.py            `# No change reguired` \
   --folder-path "/mnt/watchdir"                                    `# Must match with container path above` \
   --file-pattern "\.txt$"                                          `# regular expression pattern to match file names, like \.txt$` \
-  --apprise-url 'ntfys://user:password@ntfy.domain.org/topic'      `# Regular apprise Url `
+  --apprise-url "ntfys://user:pa\$\$sword@ntfy.domain.org/topic"   `# Regular apprise Url, you may have to escape special characters` \
 ```
 
 ### With environment variables

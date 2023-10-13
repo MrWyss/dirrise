@@ -12,7 +12,6 @@ version = '0.0.5'
 
 class AppriseNotifier:
     def __init__(self, apprise_url):
-
         self.apprise = Apprise()
         self.apprise.add(apprise_url)
 
@@ -29,11 +28,26 @@ class FolderEventHandler(FileSystemEventHandler):
         self.title_template = title_template
         self.message_template = message_template
 
+    def webdav_normalize(self, path):
+        # Remove .DAV and __db
+        replaced_path = re.sub(r'\.DAV|__db.', '', path)
+
+        # Replace consecutive slashes with a single slash - linux
+        replaced_path = re.sub(r'/{2,}', '/', replaced_path)
+
+        # Replace double backslashes with a single backslash - windows
+        replaced_path = re.sub(r'\\\\', '\\\\', replaced_path)
+
+        return replaced_path
+
     def on_created(self, event):
         if not event.is_directory:
-            file_path = event.src_path                                  
+            file_path = event.src_path
+            # WebDAV normalize
+            file_path = self.webdav_normalize(file_path)
+
             watch_folder = self.watch_folder                            
-            relative_path = os.path.relpath(file_path, watch_folder)    
+            relative_path = os.path.relpath(file_path, watch_folder)
             file = os.path.basename(file_path)                     
             subfolder_name = os.path.dirname(relative_path)             
             folder = os.path.dirname(file_path)                         
@@ -102,7 +116,7 @@ def main():
     # Folder path, raise error if not provided
     folder_path = args.folder_path or os.environ.get('FOLDER_PATH')
     if not os.path.exists(folder_path) or not os.path.isdir(folder_path): 
-        exit("Error: Missing required parameter --folder-path or environment variable FOLDER_PATH.")    
+        exit("Error: Missing required parameter --folder-path or environment variable FOLDER_PATH.")
 
     # File pattern
     file_pattern = args.file_pattern or os.environ.get('FILE_PATTERN')
@@ -116,7 +130,7 @@ def main():
         title_template = ""
     
     # Message template
-    message_template = args.message_template or os.environ.get('MESSAGE_TEMPLATE', 'New file "{FILE}" found in subfolder "{SUBFOLDER}" and folder "{FOLDER}" for the watch folder "{WATCH_FOLDER}"')
+    message_template = args.message_template or os.environ.get('MESSAGE_TEMPLATE', 'New file "{FILE}" found in subfolder "{SUBFOLDER_NAME}" and folder "{FOLDER}" for the watch folder "{WATCH_FOLDER}"')
     recursive = args.recursive if hasattr(args, 'recursive') else os.environ.get('RECURSIVE', 'True').lower() == 'true'
 
     # Check if required parameters are provided
@@ -127,7 +141,7 @@ def main():
 
     # Print header
     script_file_name = os.path.basename(__file__)
-    redacted_url = re.sub(r"(://)([^:]+):([^@]+)@", r"\1[REDACTED_USER]:[REDACTED_PASSWORD]@", apprise_url)  
+    redacted_url = re.sub(r"(://)([^:]+):([^@]+)@", r"\1[REDACTED_USER]:[REDACTED_PASSWORD]@", apprise_url)
     
     print(f"Running {script_file_name} version {version}\n")
     
