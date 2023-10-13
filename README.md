@@ -8,7 +8,11 @@ Watches a folder for new files with a given extension and sends a notification v
 ## Help
 
 ```text
-usage: dirrise.py [-h] [--folder-path FOLDER_PATH] [--file-extension FILE_EXTENSION] [--apprise-url APPRISE_URL] [--title-template TITLE_TEMPLATE] [--message-template MESSAGE_TEMPLATE] [--recursive] [--version]
+usage: dirrise.py [-h] [--folder-path FOLDER_PATH]
+                  [--file-pattern FILE_PATTERN] [--apprise-url APPRISE_URL]
+                  [--title-template TITLE_TEMPLATE]
+                  [--message-template MESSAGE_TEMPLATE] [--recursive]
+                  [--version]
 
 Watch a folder for file creations and send notifications.
 
@@ -16,8 +20,8 @@ optional arguments:
   -h, --help            show this help message and exit
   --folder-path FOLDER_PATH
                         path to the folder to watch, like /home/user/watchdir or C:\Users\user\watchdir
-  --file-extension FILE_EXTENSION
-                        file extension to watch, like .txt
+  --file-pattern FILE_PATTERN
+                        regular expression pattern to match file names, like \.txt$
   --apprise-url APPRISE_URL
                         appriser URL like ntfys://user:password@ntfy.domain.org/watchdir
   --title-template TITLE_TEMPLATE
@@ -28,6 +32,7 @@ optional arguments:
                         available variables: FILE, FILE_PATH, FOLDER, SUBFOLDER_NAME, WATCH_FOLDER, RELATIVE_PATH
   --recursive           watch folder recursively
   --version             show program's version number and exit
+
 ```
 
 ## Usage
@@ -40,7 +45,7 @@ docker run -d \
   -v "/home/username/hostdir:/mnt/watchdir"                        `# Host:Container mapping, the container path can by anything but has to match with --folder-path` \
   -it ghcr.io/mrwyss/dirrise:latest python ./dirrise.py            `# No change reguired` \
   --folder-path "/mnt/watchdir"                                    `# Must match with container path above` \
-  --file-extension ".txt"                                          `# File extension with dot` \
+  --file-pattern "\.txt$"                                          `# regular expression pattern to match file names, like \.txt$` \
   --apprise-url 'ntfys://user:password@ntfy.domain.org/topic'      `# Regular apprise Url `
 ```
 
@@ -49,9 +54,9 @@ docker run -d \
 ```bash
 docker run -it -d --name "dirrise_containername" \
 -v "/home/username/hostdir:/mnt/watchdir" \
--e FOLDER_PATH=/mnt/watchdir \
--e FILE_EXTENSION=.txt \
--e APPRISE_URL=ntfys://user:password@ntfydomainorg/topic \
+-e FOLDER_PATH="/mnt/watchdir" \
+-e FILE_PATTERN="\.txt$" \
+-e APPRISE_URL="ntfys://user:password@ntfydomainorg/topic" \
 -e TITLE_TEMPLATE="New file" \
 -e MESSAGE_TEMPLATE="New file {FILE} in {FOLDER}" \
 -e RECURSIVE=true \
@@ -63,9 +68,9 @@ ghcr.io/mrwyss/dirrise:latest
 .env file:
 
 ```bash
-FOLDER_PATH=/mnt/watchdir
-FILE_EXTENSION=.txt
-APPRISE_URL=ntfys://user:password@ntfydomainorg/topic
+FOLDER_PATH="/mnt/watchdir"
+FILE_PATTERN="\.txt$"
+APPRISE_URL="ntfys://user:password@ntfydomainorg/topic"
 TITLE_TEMPLATE="New file"
 MESSAGE_TEMPLATE="New file {FILE} in {FOLDER}"
 RECURSIVE=true
