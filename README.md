@@ -1,19 +1,19 @@
 # dirrise
 
 [![Publish Docker image](https://github.com/MrWyss/dirrise/actions/workflows/publish_docker_image.yml/badge.svg)](https://github.com/MrWyss/dirrise/actions/workflows/publish_docker_image.yml)
-[![Image Tag](https://ghcr-badge.egpl.dev/mrwyss/dirrise/tags?color=%2344cc11&ignore=&n=3&label=image+tags&trim=)](https://github.com/MrWyss/dirrise/pkgs/container/dirrise)
-[![Image Size](https://ghcr-badge.egpl.dev/mrwyss/dirrise/size?color=%2344cc11&tag=latest&label=image+size&trim=)](https://github.com/MrWyss/dirrise/pkgs/container/dirrise)
+[![Image Tag](https://ghcr-badge.egpl.dev/mrwyss/dirrise/tags?color=%2344cc11&ignore=&n=1&label=latest+image&trim=)](https://github.com/MrWyss/dirrise/pkgs/container/dirrise)
+
 
 Watches a folder for new files with a given extension and sends a notification via apprise.
 
 ## Help
 
 ```text
-usage: dirrise.py [-h] --folder-path FOLDER_PATH --file-extension FILE_EXTENSION --apprise-url APPRISE_URL [--notification-title NOTIFICATION_TITLE] [--message-template MESSAGE_TEMPLATE] [--recursive] [--version]
+usage: dirrise.py [-h] [--folder-path FOLDER_PATH] [--file-extension FILE_EXTENSION] [--apprise-url APPRISE_URL] [--notification-title NOTIFICATION_TITLE] [--message-template MESSAGE_TEMPLATE] [--recursive] [--version]
 
 Watch a folder for file creations and send notifications.
 
-options:
+optional arguments:
   -h, --help            show this help message and exit
   --folder-path FOLDER_PATH
                         Path to the folder to watch, like /home/user/watchdir or C:\Users\user\watchdir
@@ -31,6 +31,8 @@ options:
 
 ## Usage
 
+### With parameters
+
 ```bash
 docker run -d \
   --name "dirrise_containername"                                   `# Create unique container name if you run multiple instances` \
@@ -39,4 +41,40 @@ docker run -d \
   --folder-path "/mnt/watchdir"                                    `# Must match with container path above` \
   --file-extension ".txt"                                          `# File extension with dot` \
   --apprise-url 'ntfys://user:password@ntfy.domain.org/topic'      `# Regular apprise Url `
+```
+
+### With environment variables
+
+```bash
+docker run -it -d --name "dirrise_containername" \
+-v "/home/username/hostdir:/mnt/watchdir" \
+-e FOLDER_PATH=/mnt/watchdir \
+-e FILE_EXTENSION=.txt \
+-e APPRISE_URL=ntfys://user:password@ntfydomainorg/topic \
+-e NOTIFICATION_TITLE="New file" \
+-e MESSAGE_TEMPLATE="New file {FILE} in {FOLDER}" \
+-e RECURSIVE=true \
+ghcr.io/mrwyss/dirrise:latest
+```
+
+### With Environment file
+
+.env file:
+
+```bash
+FOLDER_PATH=/mnt/watchdir
+FILE_EXTENSION=.txt
+APPRISE_URL=ntfys://user:password@ntfydomainorg/topic
+NOTIFICATION_TITLE="New file"
+MESSAGE_TEMPLATE="New file {FILE} in {FOLDER}"
+RECURSIVE=true
+```
+
+run command:
+
+```bash
+docker run -it -d --name "dirrise_containername" \
+-v "/home/username/hostdir:/mnt/watchdir" \
+--env-file .env \
+ghcr.io/mrwyss/dirrise:latest
 ```
