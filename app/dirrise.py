@@ -20,10 +20,10 @@ class AppriseNotifier:
         self.apprise.notify(title=title, body=message)
 
 class FolderEventHandler(FileSystemEventHandler):
-    def __init__(self, watch_folder, file_extension, logger, apprise_notifier, title_template, message_template):
+    def __init__(self, watch_folder, file_pattern, logger, apprise_notifier, title_template, message_template):
         super().__init__()
         self.watch_folder = watch_folder
-        self.file_extension = file_extension
+        self.file_pattern = file_pattern
         self.logger = logger
         self.apprise_notifier = apprise_notifier
         self.title_template = title_template
@@ -39,27 +39,31 @@ class FolderEventHandler(FileSystemEventHandler):
             folder = os.path.dirname(file_path)                         
 
             file_info = {
-                "FILE_PATH": file_path,             #  e.g /home/user/watchdir/subdir/file.txt
-                "FILE": file,                       #  e.g. file.txt
-                "SUBFOLDER_NAME": subfolder_name,   #  e.g. subdir
+                "FILE_PATH": file_path,             # e.g /home/user/watchdir/subdir/file.txt
+                "FILE": file,                       # e.g. file.txt
+                "SUBFOLDER_NAME": subfolder_name,   # e.g. subdir
                 "FOLDER": folder,                   # e.g. /home/user/watchdir/subdir
                 "WATCH_FOLDER": watch_folder,       # e.g. /home/user/watchdir
                 "RELATIVE_PATH": relative_path      # e.g. subdir/file.txt
             }
 
-            if file.endswith(self.file_extension):
-                self.logger.info(f"Detected file {file} created in {folder}.")
-                
+            match = re.search(self.file_pattern, file)
+            if match:
+                self.logger.info(f"------------------ New match with pattern: {self.file_pattern} ------------------")
+                # Color the matched file name
+                colored_match = re.sub(match.group(0), '\033[91m' + match.group(0) + '\033[0m', file_path)
+                self.logger.info(f"Detected file        : {colored_match}.")
+               
                 # Template variables
-
                 formatted_message = self.message_template.format(**file_info)
                 formatted_title = self.title_template.format(**file_info)
 
-                self.logger.info(f"Notification title: {formatted_title}")
-                self.logger.info(f"Notification message: {formatted_message}")
+                self.logger.info(f"Notification title   : {formatted_title}")
+                self.logger.info(f"Notification message : {formatted_message}")
 
                 # Send notification
-                self.apprise_notifier.notify(message=formatted_message, title=formatted_title)           
+                self.apprise_notifier.notify(message=formatted_message, title=formatted_title)
+
 
 def setup_logging():
     logging.basicConfig(
@@ -83,7 +87,7 @@ def main():
     # region Parse arguments
     parser = argparse.ArgumentParser(description='Watch a folder for file creations and send notifications.', formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument('--folder-path', type=validate_folder_path, help='path to the folder to watch, like /home/user/watchdir or C:\\Users\\user\\watchdir')
-    parser.add_argument('--file-extension', type=str, help='file extension to watch, like .txt')
+    parser.add_argument('--file-pattern', type=str, help='regular expression pattern to match file names, like \.txt$')
     parser.add_argument('--apprise-url', type=str, help='appriser URL like ntfys://user:password@ntfy.domain.org/watchdir')
     parser.add_argument('--title-template', type=str, help="notification title template, use {VARIABLE} to replace the variables with the values.\n"
                                                            "available variables: FILE, FILE_PATH, FOLDER, SUBFOLDER_NAME, WATCH_FOLDER, RELATIVE_PATH")
@@ -100,9 +104,9 @@ def main():
     if not os.path.exists(folder_path) or not os.path.isdir(folder_path): 
         exit("Error: Missing required parameter --folder-path or environment variable FOLDER_PATH.")    
 
-    # File extension
-    file_extension = args.file_extension or os.environ.get('FILE_EXTENSION')
-    
+    # File pattern
+    file_pattern = args.file_pattern or os.environ.get('FILE_PATTERN')
+        
     # Apprise URL
     apprise_url = args.apprise_url or os.environ.get('APPRISE_URL')
 
@@ -116,7 +120,7 @@ def main():
     recursive = args.recursive if hasattr(args, 'recursive') else os.environ.get('RECURSIVE', 'True').lower() == 'true'
 
     # Check if required parameters are provided
-    if not all([folder_path, file_extension, apprise_url]):
+    if not all([folder_path, file_pattern, apprise_url]):
         print("Error: Missing required parameters.")
         return
     # endregion
@@ -130,7 +134,7 @@ def main():
     # Print command-line arguments
     print("Command-line arguments:")
     print(f"  Folder path:          {folder_path}")
-    print(f"  File extension:       {file_extension}")
+    print(f"  File pattern:         {file_pattern}")
     print(f"  Apprise URL:          {redacted_url}")
     print(f"  Title template:       {title_template}")
     print(f"  Message template:     {message_template}")
@@ -142,7 +146,7 @@ def main():
     # Start the observer
     watch_folder = os.path.join(folder_path)
 
-    event_handler = FolderEventHandler(watch_folder, file_extension, logger, apprise_notifier, title_template, message_template)
+    event_handler = FolderEventHandler(watch_folder, file_pattern, logger, apprise_notifier, title_template, message_template)
 
     observer = Observer()
     observer.schedule(event_handler, path=watch_folder, recursive=recursive)
