@@ -3,9 +3,9 @@
 [![Publish Docker image](https://github.com/MrWyss/dirrise/actions/workflows/publish_docker_image.yml/badge.svg)](https://github.com/MrWyss/dirrise/actions/workflows/publish_docker_image.yml)
 [![Image Tag](https://ghcr-badge.egpl.dev/mrwyss/dirrise/tags?color=%2344cc11&ignore=&n=1&label=latest+image&trim=)](https://github.com/MrWyss/dirrise/pkgs/container/dirrise)
 
-Watches a folder for new files with a given extension and sends a notification via apprise.
+Watches a folder for new files. If they match with the given pattern, it sends a notification via [apprise](https://github.com/caronc/apprise).
 
-## Help
+## Python Usage
 
 ```text
 usage: dirrise.py [-h] [--folder-path FOLDER_PATH]
@@ -35,7 +35,7 @@ optional arguments:
 
 ```
 
-## Usage
+## Docker Usage
 
 ### With parameters
 
@@ -57,7 +57,7 @@ docker run -it -d --name "dirrise_containername" \
 -e FOLDER_PATH="/mnt/watchdir" \
 -e FILE_PATTERN="\.txt$" \
 -e APPRISE_URL="ntfys://user:password@ntfydomainorg/topic" \
--e TITLE_TEMPLATE="New file" \
+-e TITLE_TEMPLATE="Changes in {WATCH_FOLDER}" \
 -e MESSAGE_TEMPLATE="New file {FILE} in {FOLDER}" \
 -e RECURSIVE=true \
 ghcr.io/mrwyss/dirrise:latest
@@ -71,7 +71,7 @@ ghcr.io/mrwyss/dirrise:latest
 FOLDER_PATH="/mnt/watchdir"
 FILE_PATTERN="\.txt$"
 APPRISE_URL="ntfys://user:password@ntfydomainorg/topic"
-TITLE_TEMPLATE="New file"
+TITLE_TEMPLATE="Changes in {WATCH_FOLDER}"
 MESSAGE_TEMPLATE="New file {FILE} in {FOLDER}"
 RECURSIVE=true
 ```
@@ -85,18 +85,18 @@ docker run -it -d --name "dirrise_containername" \
 ghcr.io/mrwyss/dirrise:latest
 ```
 
-### Templating
+## Templating
 
-The message template can be used to create a custom message. The following variables are available:
+The **message** and **title** can be templated with the following variables:
 
-MESSAGE_TEMPLATE
+Available variables:
 
-- **FILE** e.g. file.txt
-- **FILE_PATH** e.g. /home/user/watchdir/subdir/file.txt
-- **FOLDER** e.g. /home/user/watchdir/subdir
-- **SUBFOLDER_NAME** e.g. subdir
-- **WATCH_FOLDER** e.g. /home/user/watchdir
-- **RELATIVE_PATH** e.g. subdir/file.txt
+- **{FILE}** --> file.txt
+- **{FILE_PATH}** --> /home/user/watchdir/subdir/file.txt
+- **{FOLDER}** --> /home/user/watchdir/subdir
+- **{SUBFOLDER_NAME}** --> subdir
+- **{WATCH_FOLDER}** --> /home/user/watchdir
+- **{RELATIVE_PATH}** --> subdir/file.txt
 
 ## Contributions
 
