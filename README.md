@@ -8,23 +8,25 @@ Watches a folder for new files with a given extension and sends a notification v
 ## Help
 
 ```text
-usage: dirrise.py [-h] [--folder-path FOLDER_PATH] [--file-extension FILE_EXTENSION] [--apprise-url APPRISE_URL] [--notification-title NOTIFICATION_TITLE] [--message-template MESSAGE_TEMPLATE] [--recursive] [--version]
+usage: dirrise.py [-h] [--folder-path FOLDER_PATH] [--file-extension FILE_EXTENSION] [--apprise-url APPRISE_URL] [--title-template TITLE_TEMPLATE] [--message-template MESSAGE_TEMPLATE] [--recursive] [--version]
 
 Watch a folder for file creations and send notifications.
 
 optional arguments:
   -h, --help            show this help message and exit
   --folder-path FOLDER_PATH
-                        Path to the folder to watch, like /home/user/watchdir or C:\Users\user\watchdir
+                        path to the folder to watch, like /home/user/watchdir or C:\Users\user\watchdir
   --file-extension FILE_EXTENSION
-                        File extension to watch, like .txt
+                        file extension to watch, like .txt
   --apprise-url APPRISE_URL
-                        Appriser URL like ntfys://user:password@ntfy.domain.org/watchdir
-  --notification-title NOTIFICATION_TITLE
-                        Notification title
+                        appriser URL like ntfys://user:password@ntfy.domain.org/watchdir
+  --title-template TITLE_TEMPLATE
+                        notification title template, use {VARIABLE} to replace the variables with the values.
+                        available variables: FILE, FILE_PATH, FOLDER, SUBFOLDER_NAME, WATCH_FOLDER, RELATIVE_PATH
   --message-template MESSAGE_TEMPLATE
-                        Available variables: FILE, SUBFOLDER, FOLDER, WATCHFOLDER. Use {variable} to replace the variable with the value. Use \{variable} to escape the variable.
-  --recursive           Watch folder recursively
+                        notification message template, use {VARIABLE} to replace the variables with the values.
+                        available variables: FILE, FILE_PATH, FOLDER, SUBFOLDER_NAME, WATCH_FOLDER, RELATIVE_PATH
+  --recursive           watch folder recursively
   --version             show program's version number and exit
 ```
 
@@ -50,7 +52,7 @@ docker run -it -d --name "dirrise_containername" \
 -e FOLDER_PATH=/mnt/watchdir \
 -e FILE_EXTENSION=.txt \
 -e APPRISE_URL=ntfys://user:password@ntfydomainorg/topic \
--e NOTIFICATION_TITLE="New file" \
+-e TITLE_TEMPLATE="New file" \
 -e MESSAGE_TEMPLATE="New file {FILE} in {FOLDER}" \
 -e RECURSIVE=true \
 ghcr.io/mrwyss/dirrise:latest
@@ -64,7 +66,7 @@ ghcr.io/mrwyss/dirrise:latest
 FOLDER_PATH=/mnt/watchdir
 FILE_EXTENSION=.txt
 APPRISE_URL=ntfys://user:password@ntfydomainorg/topic
-NOTIFICATION_TITLE="New file"
+TITLE_TEMPLATE="New file"
 MESSAGE_TEMPLATE="New file {FILE} in {FOLDER}"
 RECURSIVE=true
 ```
@@ -78,5 +80,19 @@ docker run -it -d --name "dirrise_containername" \
 ghcr.io/mrwyss/dirrise:latest
 ```
 
+### Templating
+
+The message template can be used to create a custom message. The following variables are available:
+
+MESSAGE_TEMPLATE
+
+- **FILE** e.g. file.txt
+- **FILE_PATH** e.g. /home/user/watchdir/subdir/file.txt
+- **FOLDER** e.g. /home/user/watchdir/subdir
+- **SUBFOLDER_NAME** e.g. subdir
+- **WATCH_FOLDER** e.g. /home/user/watchdir
+- **RELATIVE_PATH** e.g. subdir/file.txt
+
 ## Contributions
+
 - please do, I'm happy to accept PRs.  
