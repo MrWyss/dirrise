@@ -76,11 +76,11 @@ ghcr.io/mrwyss/dirrise:latest
 .env file:
 
 ```bash
-FOLDER_PATH="/mnt/watchdir"
-FILE_PATTERN="\.txt$"
-APPRISE_URL="ntfys://user:password@ntfydomainorg/topic"
-TITLE_TEMPLATE="Changes in {WATCH_FOLDER}"
-MESSAGE_TEMPLATE="New file {FILE} in {FOLDER}"
+FOLDER_PATH=/mnt/watchdir
+FILE_PATTERN=\.txt$
+APPRISE_URL=ntfys://user:password@ntfydomainorg/topic
+TITLE_TEMPLATE=Changes in {WATCH_FOLDER}
+MESSAGE_TEMPLATE=New file {FILE} in {FOLDER}
 RECURSIVE=true
 ```
 
