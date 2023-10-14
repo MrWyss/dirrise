@@ -1,41 +1,49 @@
 # dirrise
 
-[![Publish Docker image](https://github.com/MrWyss/dirrise/actions/workflows/publish_docker_image.yml/badge.svg)](https://github.com/MrWyss/dirrise/actions/workflows/publish_docker_image.yml)
-[![Image Tag](https://ghcr-badge.egpl.dev/mrwyss/dirrise/tags?color=%2344cc11&ignore=&n=1&label=latest+image&trim=)](https://github.com/MrWyss/dirrise/pkgs/container/dirrise)
-
 Watches a folder for new files. If they match with the given pattern, it sends a notification via [apprise](https://github.com/caronc/apprise).
 
 ## Python Usage
 
 ```text
-usage: dirrise.py [-h] [--folder-path FOLDER_PATH]
-                  [--file-pattern FILE_PATTERN] [--apprise-url APPRISE_URL]
-                  [--title-template TITLE_TEMPLATE]
-                  [--message-template MESSAGE_TEMPLATE] [--recursive]
-                  [--version]
+usage: dirrise.py [-h] [-f FOLDER_PATH] [-p FILE_PATTERN] [-u APPRISE_URL]
+                  [-t TITLE_TEMPLATE] [-m MESSAGE_TEMPLATE] [-r] [-v]
 
 Watch a folder for file creations and send notifications.
 
 optional arguments:
   -h, --help            show this help message and exit
-  --folder-path FOLDER_PATH
-                        path to the folder to watch, like /home/user/watchdir or C:\Users\user\watchdir
-  --file-pattern FILE_PATTERN
-                        regular expression pattern to match file names, like \.txt$
-  --apprise-url APPRISE_URL
-                        appriser URL like ntfys://user:password@ntfy.domain.org/watchdir
-  --title-template TITLE_TEMPLATE
-                        notification title template, use {VARIABLE} to replace the variables with the values.
+  -f FOLDER_PATH, --folder-path FOLDER_PATH
+                        path to the folder to watch.
+                        Can also be set with environment Variable FOLDER_PATH
+                          e.g. /home/user/watchdir or C:\Users\user\watchdir
+  -p FILE_PATTERN, --file-pattern FILE_PATTERN
+                        regular expression pattern to match file names
+                        can also be set with environment Variable FILE_PATTERN
+                          e.g. \.txt$'
+  -u APPRISE_URL, --apprise-url APPRISE_URL
+                        apprise url
+                        can also be set with environment Variable APPRISE_URL
+                          e.g. ntfys://user:password@ntfy.domain.org/watchdir
+  -t TITLE_TEMPLATE, --title-template TITLE_TEMPLATE
+                        notification title template
+                        can also be set with environment Variable TITLE_TEMPLATE
+                          e.g. New file {FILE} found in subfolder {SUBFOLDER_NAME} and folder {FOLDER} for the watch folder {WATCH_FOLDER}
                         available variables: FILE, FILE_PATH, FOLDER, SUBFOLDER_NAME, WATCH_FOLDER, RELATIVE_PATH
-  --message-template MESSAGE_TEMPLATE
-                        notification message template, use {VARIABLE} to replace the variables with the values.
+  -m MESSAGE_TEMPLATE, --message-template MESSAGE_TEMPLATE
+                        notification message template
+                        can also be set with environment Variable MESSAGE_TEMPLATE
+                          e.g. New file {FILE} found in subfolder {SUBFOLDER_NAME} and folder {FOLDER} for the watch folder {WATCH_FOLDER}
                         available variables: FILE, FILE_PATH, FOLDER, SUBFOLDER_NAME, WATCH_FOLDER, RELATIVE_PATH
-  --recursive           watch folder recursively
-  --version             show program's version number and exit
-
+  -r, --recursive       watch folder recursively
+                        can also be set with environment Variable RECURSIVE
+                          e.g. True or False
+  -v, --version         show program's version number and exit
 ```
 
 ## Docker Usage
+
+[![Publish Docker image](https://github.com/MrWyss/dirrise/actions/workflows/publish_docker_image.yml/badge.svg)](https://github.com/MrWyss/dirrise/actions/workflows/publish_docker_image.yml)
+[![Image Tag](https://ghcr-badge.egpl.dev/mrwyss/dirrise/tags?color=%2344cc11&ignore=&n=1&label=latest+image&trim=)](https://github.com/MrWyss/dirrise/pkgs/container/dirrise)
 
 ### With parameters
 
@@ -88,8 +96,6 @@ ghcr.io/mrwyss/dirrise:latest
 ## Templating
 
 The **message** and **title** can be templated with the following variables:
-
-Available variables:
 
 - **{FILE}** --> file.txt
 - **{FILE_PATH}** --> /home/user/watchdir/subdir/file.txt
