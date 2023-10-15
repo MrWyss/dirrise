@@ -1,6 +1,17 @@
 # dirrise
+<p align="center">
+  <img alt="ai generated dirrise logo" src="docs/assets/aigenlogo.png" width="300">
+</p>
 
-Watches a folder for new files. If they match with the given pattern, it sends a notification via [apprise](https://github.com/caronc/apprise).
+---
+
+***<p style="text-align: center;">«Watches a folder for new files. If they match with the given pattern, it sends a notification via [apprise](https://github.com/caronc/apprise).»</p>***
+
+---
+
+![demo dirrise](docs/assets/demo_dirrise.gif)
+
+---
 
 ## Python Usage
 
