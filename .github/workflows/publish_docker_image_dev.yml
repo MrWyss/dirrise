@@ -45,6 +45,7 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }} 
+      
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
@@ -62,8 +63,6 @@ jobs:
             org.opencontainers.image.version=${{ inputs.tag }}
             org.opencontainers.image.created=${{ github.event.repository.pushed_at }}
             org.opencontainers.image.revision=${{ github.sha }}
-          outputs: type=image,name=${{ env.IMAGE_NAME }},annotation-index.org.opencontainers.image.description=${{ github.event.repository.description }},annotation-index.org.opencontainers.image.url=https://${{ env.IMAGE_VERSION }},annotation-index.org.opencontainers.image.source=https://${{ env.GITHUB_REPOSITORY }},annotation-index.org.opencontainers.image.version=${{ inputs.tag }},annotation-index.org.opencontainers.image.created=${{ github.event.repository.pushed_at }},annotation-index.org.opencontainers.image.revision=${{ github.sha }},
-
 
       - name: Creating Summary
         run: |
