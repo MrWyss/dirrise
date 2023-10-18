@@ -162,7 +162,7 @@ def main():
                         type=str,
                         help="regular expression pattern to match file names\n"
                              "can also be set with environment Variable FILE_PATTERN\n"
-                             "  e.g. \.txt$'")
+                             "  e.g. \\.txt$")
 
     parser.add_argument('-u', '--apprise-url',
                         required=False,

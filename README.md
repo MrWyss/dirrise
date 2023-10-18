@@ -30,7 +30,7 @@ optional arguments:
   -p FILE_PATTERN, --file-pattern FILE_PATTERN
                         regular expression pattern to match file names
                         can also be set with environment Variable FILE_PATTERN
-                          e.g. \.txt$'
+                          e.g. \.txt$
   -u APPRISE_URL, --apprise-url APPRISE_URL
                         apprise url
                         can also be set with environment Variable APPRISE_URL
