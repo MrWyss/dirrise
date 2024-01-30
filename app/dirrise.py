@@ -8,7 +8,7 @@ from apprise import AppriseConfig, Apprise
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
-version = '1.0.0'
+version = '1.0.1'
 
 
 class CustomArgumentParser(argparse.ArgumentParser):
