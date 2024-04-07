@@ -4,7 +4,7 @@ import sys
 import logging
 import argparse
 from argparse import RawTextHelpFormatter
-from apprise import AppriseConfig, Apprise
+from apprise import AppriseConfig, Apprise, AppriseAsset, NotifyType
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
@@ -29,12 +29,21 @@ class CustomArgumentParser(argparse.ArgumentParser):
 
 class AppriseNotifier:
     def __init__(self, apprise_url):
-        self.apprise = Apprise()
+        self.asset = AppriseAsset(
+            app_id = 'dirrise',
+            app_desc = 'Watches a folder and notifies with apprise on activity',
+            app_url = 'https://github.com/MrWyss/dirrise',
+            image_url_mask="https://github.com/MrWyss/dirrise/raw/main/app/logos/{TYPE}-{XY}{EXTENSION}",
+            #image_path_mask="\logos\{TYPE}-{XY}{EXTENSION}",
+            default_extension=".png"
+        )        
+        self.apprise = Apprise(asset=self.asset)
         self.apprise.add(apprise_url)
 
-    def notify(self, title, message):
-        self.apprise.notify(title=title, body=message)
 
+    def notify(self, title, message):
+        self.apprise.notify(title=title, body=message, notify_type=NotifyType.INFO)
+    
 
 class Watcher:
     def __init__(self, event_handler, path, recursive):
@@ -232,6 +241,7 @@ def main():
 
     # Apprise
     apprise_notifier = AppriseNotifier(args.apprise_url)
+
 
     # Start the observer
     watch_folder = os.path.join(args.folder_path)
