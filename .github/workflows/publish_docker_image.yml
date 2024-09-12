@@ -15,6 +15,8 @@ on:
       tag:
         description: 'Image Tag'
         required: true
+  release:
+    types: [published]
 env:
   REGISTRY: ghcr.io
   GITHUB_REPOSITORY: ${{ github.repository }}
@@ -30,11 +32,14 @@ jobs:
       - name: Downcase IMAGE_NAME
         run: echo "IMAGE_NAME=${GITHUB_REPOSITORY,,}" >> ${GITHUB_ENV}
 
+      - name: Set Image Tag
+        run: echo "IMAGE_TAG=${{ (github.event_name == 'release' && github.event.release.tag_name) || (github.event_name == 'workflow_dispatch' && inputs.tag) || '' }}" >> ${GITHUB_ENV}
+
       - name: Set Image Tag Latest
         run: echo "IMAGE_LATEST=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest" >> ${GITHUB_ENV}
       
       - name: Set Image Tag Version
-        run: echo "IMAGE_VERSION=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ inputs.tag }}" >> ${GITHUB_ENV}
+        run: echo "IMAGE_VERSION=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}" >> ${GITHUB_ENV}
      
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -63,7 +68,7 @@ jobs:
             org.opencontainers.image.description=${{ github.event.repository.description }}
             org.opencontainers.image.url=https://github.com/${{ env.GITHUB_REPOSITORY }}
             org.opencontainers.image.source=https://github.com/${{ env.GITHUB_REPOSITORY }}
-            org.opencontainers.image.version=${{ inputs.tag }}
+            org.opencontainers.image.version=${{ env.IMAGE_TAG }}
             org.opencontainers.image.created=${{ github.event.repository.pushed_at }}
             org.opencontainers.image.revision=${{ github.sha }}
       
