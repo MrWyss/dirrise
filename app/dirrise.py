@@ -8,7 +8,7 @@ from apprise import AppriseConfig, Apprise, AppriseAsset, NotifyType
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
-version = '1.1.7'
+version = '1.1.8'
 
 
 class CustomArgumentParser(argparse.ArgumentParser):
@@ -225,8 +225,17 @@ def main():
 
     # Print header
     script_file_name = os.path.basename(__file__)
+    
+    # Strip surrounding quotes if present
+    args.apprise_url = args.apprise_url.strip("'\"")
+    
+    # Redact sensitive information in the Apprise URL
     redacted_url = re.sub(
         r"(://)([^:]+):([^@]+)@", r"\1[REDACTED_USER]:[REDACTED_PASSWORD]@", args.apprise_url)
+    
+    # Redact telegram token if present, tgram://{bot_token}/{chat_id1}:topic1}/{chat_id2}:{topic2}/{chat_id3}:{topic3}/
+    redacted_url = re.sub(
+        r"(tgram://)([^:/]+:[^@/]+)(.*)", r"\1[REDACTED_TOKEN]\3", redacted_url)
 
     print(f"Running {script_file_name} version {version}\n")
 
